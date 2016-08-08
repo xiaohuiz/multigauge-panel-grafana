@@ -1,0 +1,32 @@
+{
+  "type": "panel",
+  "name": "MultiGauge Chart",
+  "id": "grafana-multigauge-panel",
+
+  "info": {
+    "description": "MultiGauge chart panel for grafana",
+    "author": {
+      "name": "Tom Zhang"
+    },
+    "keywords": ["multigauge", "panel"],
+    "logos": {
+      "small": "src/img/piechart_logo_small.png",
+      "large": "src/img/piechart_logo_large.png"
+    },
+    "links": [
+      {"name": "Project site", "url": ""},
+      {"name": "Blog Post", "url": ""},
+      {"name": "MIT License", "url": ""}
+    ],
+    "screenshots": [
+      {"name": "Donut!", "path": "src/img/piechart-donut.png"}
+    ],
+    "version": "1.1.1",
+    "updated": "2016-08-03"
+  },
+
+  "dependencies": {
+    "grafanaVersion": "3.x.x",
+    "plugins": [ ]
+  }
+}

@@ -1,0 +1,51 @@
+<div class="editor-row" >
+	<div class="section" style="margin-bottom: 20px">
+		<div class="tight-form last" ng-repeat="measure in ['pointer','water_mark','temperature']">
+			<ul class="tight-form-list">
+				<li class="tight-form-item" style="width: 80px">
+					<strong>{{measure}}</strong>
+				</li>
+        <li class="tight-form-item" >
+					<input type="text" class="input-large tight-form-input" bs-typeahead="ctrl.panel.measures.series_names" ng-model="ctrl.panel.measures[measure].target" ng-blur="ctrl.refreshData()"></input>
+				</li>
+        <li class="tight-form-item">
+					Name<tip>name of the measure on the gauge</tip>
+				</li>
+				<li>
+					<input type="text" class="input-small tight-form-input" ng-model="ctrl.panel.measures[measure].name" ng-blur="ctrl.refreshData()" placeholder=""></input>
+				</li>
+				<li class="tight-form-item">
+					Min,Max<tip>Define the min and max values of the measure</tip>
+				</li>
+				<li>
+					<input type="text" class="input-small tight-form-input" ng-model="ctrl.panel.measures[measure].thresholds" ng-blur="ctrl.refreshData()" placeholder="0,10"></input>
+				</li>
+			</ul>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+</div>
+
+<div class="editor-row" >
+  <h5 class="page-heading">Set range mappings</h5>
+  <div class="gf-form-group">
+    <div class="gf-form" ng-repeat="indicator in ctrl.panel.measures.indicators">
+        <span class="gf-form-label">
+          <i class="fa fa-remove pointer" ng-click="ctrl.removeIndicator(indicator)"></i>
+        </span>
+        <span class="gf-form-label">Metric</span>
+        <input type="text" ng-model="indicator.target" bs-typeahead="ctrl.panel.measures.series_names" class="gf-form-input max-width-10" ng-blur="ctrl.refreshData()">
+        <span class="gf-form-label">Name</span>
+        <input type="text" ng-model="indicator.name" class="gf-form-input max-width-6" ng-blur="ctrl.refreshData()">
+        <span class="gf-form-label">Value range for green</span>
+        <input type="text" ng-model="indicator.thresholds" class="gf-form-input max-width-8" placeholder="0,1" ng-blur="ctrl.refreshData()">
+    </div>
+
+    <div class="gf-form-button-row">
+      <button class="btn btn-inverse" ng-click="ctrl.addIndicator()">
+        <i class="fa fa-plus"></i>
+        Add indicator
+      </button>
+    </div>
+  </div>
+</div>
