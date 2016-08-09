@@ -193,16 +193,23 @@ export function directive_gauge($timeout){
 				;
 				self.redraw(data);
 			};
+			this.calcWaterMark=function(d){
+				if(water_mark.value_as_space){
+				  return water_mark.scale(d.water_mark);
+			  }else {
+					return 1-water_mark.scale(d.water_mark);
+			  }
+			}
 			this.redraw=function(data){
 					clip.data([data])
 						.transition().duration(1)
-						.attr('y',function(d){return gauge_size*(1-water_mark.scale(d.water_mark))-3;});
+						.attr('y',function(d){return gauge_size*self.calcWaterMark(d)-3;});
 					circle_c.data([data])
 						.attr("fill",function(d) { return "hsl("+120*(1-temperature.scale(d.temperature))+",100%,60%)";});
 					circle_s.data([data])
 						.attr("style",function(d) { return "stroke:hsl("+120*(1-temperature.scale(d.temperature))+",100%,60%);stroke-width:2;fill:white;filter:url("+baseUrl+"#dropshadow)";});
 					title_f.data([data])
-						.attr('y',function(d) { return gauge_size*(1-water_mark.scale(d.water_mark))-3})
+						.attr('y',function(d) { return gauge_size*self.calcWaterMark(d)-3})
 						.text(function(d) { return water_mark.name+':'+Math.round(d.water_mark)+' '+temperature.name+':'+Math.round(d.temperature)});
 					title_v.data([data])
 						.text(function(d){return Math.round(d.pointer)});
