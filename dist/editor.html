@@ -8,6 +8,15 @@
         <li class="tight-form-item" >
 					<input type="text" class="input-large tight-form-input" bs-typeahead="ctrl.panel.measures.series_names" ng-model="ctrl.panel.measures[measure].target" ng-blur="ctrl.refreshData()"></input>
 				</li>
+				<li class="tight-form-item">
+					Value
+				</li>
+				<li>
+					<select class="input-small tight-form-input"
+            ng-model="ctrl.panel.measures[measure].valueName"
+            ng-options="f for f in ctrl.valueNameOptions"
+            ng-change="ctrl.refreshData()"></select>
+				</li>
         <li class="tight-form-item">
 					Name<tip>name of the measure on the gauge</tip>
 				</li>
@@ -20,6 +29,11 @@
 				<li>
 					<input type="text" class="input-small tight-form-input" ng-model="ctrl.panel.measures[measure].thresholds" ng-blur="ctrl.refreshData()" placeholder="0,10"></input>
 				</li>
+				<li ng-if="measure=='water_mark'" class="tight-form-item">
+					Value as space&nbsp;
+					<input class="cr1" id="panel.measures.water_mark.value_as_space" type="checkbox" ng-model="ctrl.panel.measures[measure].value_as_space" ng-change="ctrl.refreshData()">
+					<label for="panel.measures.water_mark.value_as_space" class="cr1"></label>
+				</li>
 			</ul>
 			<div class="clearfix"></div>
 		</div>
@@ -27,7 +41,7 @@
 </div>
 
 <div class="editor-row" >
-  <h5 class="page-heading">Set range mappings</h5>
+  <h5 class="page-heading">Set indicators</h5>
   <div class="gf-form-group">
     <div class="gf-form" ng-repeat="indicator in ctrl.panel.measures.indicators">
         <span class="gf-form-label">
@@ -35,6 +49,8 @@
         </span>
         <span class="gf-form-label">Metric</span>
         <input type="text" ng-model="indicator.target" bs-typeahead="ctrl.panel.measures.series_names" class="gf-form-input max-width-10" ng-blur="ctrl.refreshData()">
+				<span class="gf-form-label">Value</span>
+				<select class="input-small tight-form-input"  ng-model="indicator.valueName" ng-options="f for f in ctrl.valueNameOptions" ng-change="ctrl.refreshData()"></select>
         <span class="gf-form-label">Name</span>
         <input type="text" ng-model="indicator.name" class="gf-form-input max-width-6" ng-blur="ctrl.refreshData()">
         <span class="gf-form-label">Value range for green</span>

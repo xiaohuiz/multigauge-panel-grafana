@@ -19,7 +19,7 @@ System.register(['./vender/d3'], function (_export, _context) {
 				var gauge_created = false;
 				var g = null;
 				function recreate_gauge() {
-					if (scope.size > 0 && scope.config.temperature !== undefined && scope.config.temperature.min !== undefined && scope.config.temperature.min < scope.config.temperature.max && scope.config.water_mark !== undefined && scope.config.water_mark.min !== undefined && scope.config.water_mark.min < scope.config.water_mark.max && scope.config.pointer !== undefined && scope.config.pointer.min !== undefined && scope.config.pointer.min < scope.config.pointer.max) {
+					if (scope.size > 0 && scope.config.temperature != undefined && scope.config.temperature.min !== undefined && scope.config.temperature.min < scope.config.temperature.max && scope.config.water_mark != undefined && scope.config.water_mark.min !== undefined && scope.config.water_mark.min < scope.config.water_mark.max && scope.config.pointer != undefined && scope.config.pointer.min !== undefined && scope.config.pointer.min < scope.config.pointer.max) {
 						g = new Gauge('gauge-' + scope.gaugeid, scope.size, scope.config, scope.data);
 						g.render();
 						gauge_created = true;
@@ -41,7 +41,7 @@ System.register(['./vender/d3'], function (_export, _context) {
 					};
 					var style_red = Object.assign({ 'border': '1px solid #d23d3d', 'background-color': '#d64e4e' }, indicator_style);
 					var style_green = Object.assign({ 'border': '1px solid #2f9f5e', 'background-color': '#34af67' }, indicator_style);
-					if (ind.value >= ind.min && ind.value <= ind.max) {
+					if (ind.value != undefined && ind.value >= ind.min && ind.value <= ind.max) {
 						return style_green;
 					} else {
 						return style_red;
@@ -148,9 +148,16 @@ System.register(['./vender/d3'], function (_export, _context) {
 			svg_pointer.append('circle').attr('cx', gauge_size / 2).attr('cy', gauge_size / 2).attr('r', gauge_size / 50).attr('style', 'fill:#4684EE;stroke:#666;opacity:1');
 			self.redraw(data);
 		};
+		this.calcWaterMark = function (d) {
+			if (water_mark.value_as_space) {
+				return water_mark.scale(d.water_mark);
+			} else {
+				return 1 - water_mark.scale(d.water_mark);
+			}
+		};
 		this.redraw = function (data) {
 			clip.data([data]).transition().duration(1).attr('y', function (d) {
-				return gauge_size * (1 - water_mark.scale(d.water_mark)) - 3;
+				return gauge_size * self.calcWaterMark(d) - 3;
 			});
 			circle_c.data([data]).attr("fill", function (d) {
 				return "hsl(" + 120 * (1 - temperature.scale(d.temperature)) + ",100%,60%)";
@@ -159,7 +166,7 @@ System.register(['./vender/d3'], function (_export, _context) {
 				return "stroke:hsl(" + 120 * (1 - temperature.scale(d.temperature)) + ",100%,60%);stroke-width:2;fill:white;filter:url(" + baseUrl + "#dropshadow)";
 			});
 			title_f.data([data]).attr('y', function (d) {
-				return gauge_size * (1 - water_mark.scale(d.water_mark)) - 3;
+				return gauge_size * self.calcWaterMark(d) - 3;
 			}).text(function (d) {
 				return water_mark.name + ':' + Math.round(d.water_mark) + ' ' + temperature.name + ':' + Math.round(d.temperature);
 			});

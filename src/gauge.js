@@ -21,9 +21,9 @@ export function directive_gauge($timeout){
 				var g = null;
 				function recreate_gauge(){
 					if( scope.size>0 &&
-						  (scope.config.temperature!==undefined && scope.config.temperature.min!==undefined && scope.config.temperature.min< scope.config.temperature.max) &&
-							(scope.config.water_mark!==undefined && scope.config.water_mark.min!==undefined && scope.config.water_mark.min< scope.config.water_mark.max) &&
-							(scope.config.pointer!==undefined && scope.config.pointer.min!==undefined && scope.config.pointer.min< scope.config.pointer.max)){
+						  (scope.config.temperature!=undefined && scope.config.temperature.min!==undefined && scope.config.temperature.min< scope.config.temperature.max) &&
+							(scope.config.water_mark!=undefined && scope.config.water_mark.min!==undefined && scope.config.water_mark.min< scope.config.water_mark.max) &&
+							(scope.config.pointer!=undefined && scope.config.pointer.min!==undefined && scope.config.pointer.min< scope.config.pointer.max)){
 								g=new Gauge('gauge-'+scope.gaugeid,scope.size,scope.config,scope.data);
 								g.render();
 								gauge_created=true;
@@ -45,7 +45,7 @@ export function directive_gauge($timeout){
 					};
 					var style_red = Object.assign({'border': '1px solid #d23d3d', 'background-color': '#d64e4e'},indicator_style);
 					var style_green = Object.assign({'border': '1px solid #2f9f5e','background-color': '#34af67'},indicator_style);
-					if(ind.value>=ind.min && ind.value <=ind.max) {
+					if(ind.value!=undefined && ind.value>=ind.min && ind.value <=ind.max) {
 						return style_green;
 					}else{
 						return style_red;

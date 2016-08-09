@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['app/plugins/sdk', 'lodash', './gauge'], function (_export, _context) {
+System.register(['app/plugins/sdk', 'app/core/time_series2', 'lodash', './gauge'], function (_export, _context) {
   "use strict";
 
-  var MetricsPanelCtrl, _, directive_gauge, _createClass, panelDefaults, MultiGaugeCtrl;
+  var MetricsPanelCtrl, TimeSeries, _, directive_gauge, _createClass, panelDefaults, MultiGaugeCtrl;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -38,6 +38,8 @@ System.register(['app/plugins/sdk', 'lodash', './gauge'], function (_export, _co
   return {
     setters: [function (_appPluginsSdk) {
       MetricsPanelCtrl = _appPluginsSdk.MetricsPanelCtrl;
+    }, function (_appCoreTime_series) {
+      TimeSeries = _appCoreTime_series.default;
     }, function (_lodash) {
       _ = _lodash.default;
     }, function (_gauge) {
@@ -70,9 +72,9 @@ System.register(['app/plugins/sdk', 'lodash', './gauge'], function (_export, _co
         targets: [{}],
         cacheTimeout: null,
         measures: {
-          pointer: { name: '', target: '', thresholds: "0,100" },
-          water_mark: { name: '', target: '', thresholds: "0,1" },
-          temperature: { name: '', target: '', thresholds: "0,1" },
+          pointer: { name: '', target: '', thresholds: "0,100", valueName: 'avg' },
+          water_mark: { name: '', target: '', thresholds: "0,1", valueName: 'avg', value_as_space: false },
+          temperature: { name: '', target: '', thresholds: "0,1", valueName: 'avg' },
           indicators: [],
           series_names: []
         },
@@ -96,6 +98,7 @@ System.register(['app/plugins/sdk', 'lodash', './gauge'], function (_export, _co
 
           _this.$rootScope = $rootScope;
           _.defaults(_this.panel, panelDefaults);
+          _this.valueNameOptions = ['avg', 'current', 'min', 'max', 'total'];
 
           _this.events.on('data-received', _this.onDataReceived.bind(_this));
           _this.events.on('data-error', _this.onDataError.bind(_this));
@@ -136,14 +139,16 @@ System.register(['app/plugins/sdk', 'lodash', './gauge'], function (_export, _co
             });
             this.panel.multigauge.indicators = [];
             _.each(this.panel.measures['indicators'], function (m) {
-              var matched_series = _this2.getData(m, _this2.dataList);
-              if (matched_series[0].value !== undefined) _this2.panel.multigauge.indicators = _this2.panel.multigauge.indicators.concat(matched_series);
+              var matched_series = _this2.getData(m, _this2.dataList); //add all indicators regardless having data or not
+              _this2.panel.multigauge.indicators = _this2.panel.multigauge.indicators.concat(matched_series);
             });
             this.$timeout(this.render.bind(this));
           }
         }, {
           key: 'getData',
           value: function getData(measure, series) {
+            var _this3 = this;
+
             //var measure=this.panel.measures[measure_name];
             var _re = measure.target.match(/^\/(.+)\/$/);
             var re = new RegExp(_re ? _re[1] : '^' + measure.target + '$');
@@ -152,17 +157,28 @@ System.register(['app/plugins/sdk', 'lodash', './gauge'], function (_export, _co
             });
             if (_.size(matched_series) > 0) {
               return _.map(matched_series, function (s) {
-                return {
-                  name: measure.name == '' ? measure.target : measure.name,
-                  min: +measure.thresholds.split(',')[0],
-                  max: +measure.thresholds.split(',')[1],
-                  target: s.target,
-                  value: Math.round(100 * _.last(s.datapoints)[0]) / 100
-                };
+                return _this3.combineMetaAndData(measure, s);
               });
             } else {
-              return [_.assign({ value: undefined }, measure)];
+              return [this.combineMetaAndData(measure)];
             }
+          }
+        }, {
+          key: 'combineMetaAndData',
+          value: function combineMetaAndData(measure, series) {
+            var v = _.assign({
+              min: +measure.thresholds.split(',')[0],
+              max: +measure.thresholds.split(',')[1],
+              value: null
+            }, measure);
+            if (v.name == '') v.name = v.target;
+            if (series && series.target != undefined) v.target = series.target;
+            if (series && _.size(series.datapoints) > 0) {
+              var ts = new TimeSeries({ datapoints: series.datapoints, alias: series.target });
+              ts.flotpairs = ts.getFlotPairs();
+              v.value = Math.round(100 * ts.stats[measure.valueName]) / 100;
+            }
+            return v;
           }
         }, {
           key: 'addIndicator',
