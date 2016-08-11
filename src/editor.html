@@ -1,9 +1,10 @@
 <div class="editor-row" >
 	<div class="section" style="margin-bottom: 20px">
-		<div class="tight-form last" ng-repeat="measure in ['pointer','water_mark','temperature']">
+		<div class="tight-form last" ng-repeat="measure in ['pointer','water_mark','temperature','disable']">
 			<ul class="tight-form-list">
 				<li class="tight-form-item" style="width: 80px">
 					<strong>{{measure}}</strong>
+					<tip ng-if="measure=='disable'">gray out the whole gauge when the measure value fall within Min and Max values</tip>
 				</li>
         <li class="tight-form-item" >
 					<input type="text" class="input-large tight-form-input" bs-typeahead="ctrl.panel.measures.series_names" ng-model="ctrl.panel.measures[measure].target" ng-blur="ctrl.refreshData()"></input>
@@ -18,7 +19,7 @@
             ng-change="ctrl.refreshData()"></select>
 				</li>
         <li class="tight-form-item">
-					Name<tip>name of the measure on the gauge</tip>
+					Name<tip>display name on the gauge</tip>
 				</li>
 				<li>
 					<input type="text" class="input-small tight-form-input" ng-model="ctrl.panel.measures[measure].name" ng-blur="ctrl.refreshData()" placeholder=""></input>

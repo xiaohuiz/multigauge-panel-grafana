@@ -13,7 +13,7 @@ System.register(['./vender/d3'], function (_export, _context) {
 				indicators: '=',
 				size: '='
 			},
-			template: '\n\t\t\t\t<div  bs-tooltip="config.pointer.target+\': \'+data.pointer +\'<br>\'+config.temperature.target+\': \'+data.temperature+\'<br>\'+config.water_mark.target+\': \'+data.water_mark" >\n\t\t\t\t\t<div style="display:block;margin: 0 auto; width: {{size}}px" id="gauge-{{gaugeid}}"> </div>\n\t\t\t\t\t<div  style="display:block; margin: 0 auto; width: {{size}}px; text-align: center">\n\t\t\t\t\t\t<div ng-repeat="ind in indicators" ng-style="styleIndicator(ind)" bs-tooltip="ind.target+\':\'+ind.value">{{ind.name}}</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>',
+			template: '\n\t\t\t\t<div  style="position: relative" bs-tooltip="config.pointer.target+\': \'+data.pointer +\'<br>\'+config.temperature.target+\': \'+data.temperature+\'<br>\'+config.water_mark.target+\': \'+data.water_mark" >\n\t\t\t\t\t<div style="display:block;margin: 0 auto; width: {{size}}px" id="gauge-{{gaugeid}}"> </div>\n\t\t\t\t\t<div  style="display:block; margin: 0 auto; width: {{size}}px; text-align: center">\n\t\t\t\t\t\t<div ng-repeat="ind in indicators" ng-style="styleIndicator(ind)" bs-tooltip="ind.target+\':\'+ind.value">{{ind.name}}</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div ng-if="data.disable!=undefined && data.disable>=config.disable.min && data.disable <=config.disable.max" style="width:100%; height: 100%; position: absolute; top:0; left:0; z-index:10; background-color:rgba(200,200,200,0.4); color:red; font-weight: bold" align="right">{{config.disable.name}}</div>\n\t\t\t\t</div>',
 			link: function link(scope, element, attrs) {
 				scope.gaugeid = scope.$id;
 				var gauge_created = false;

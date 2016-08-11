@@ -15,6 +15,7 @@ var panelDefaults = {
     pointer:{name:'',target:'',thresholds:"0,100",valueName:'avg'},
     water_mark:{name:'',target:'',thresholds:"0,1",valueName:'avg',value_as_space:false},
     temperature:{name:'',target:'',thresholds:"0,1",valueName:'avg'},
+    disable:{name:'',target:'',thresholds:"0,1",valueName:'avg'},
     indicators:[],
     series_names:[]
   },
@@ -53,7 +54,7 @@ class MultiGaugeCtrl extends MetricsPanelCtrl {
   }
   refreshData(){
     this.panel.measures.series_names=_.size(this.dataList)>0 ? _.map(this.dataList,s=>s.target) : [];
-    _.each(['pointer','water_mark','temperature'],m=>{
+    _.each(['pointer','water_mark','temperature','disable'],m=>{
       var c =this.getData(this.panel.measures[m],this.dataList)[0];
       this.panel.multigauge.config[m] =c;
       this.panel.multigauge.data[m] = c.value;

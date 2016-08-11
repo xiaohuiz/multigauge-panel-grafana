@@ -75,6 +75,7 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'lodash', './gauge'
           pointer: { name: '', target: '', thresholds: "0,100", valueName: 'avg' },
           water_mark: { name: '', target: '', thresholds: "0,1", valueName: 'avg', value_as_space: false },
           temperature: { name: '', target: '', thresholds: "0,1", valueName: 'avg' },
+          disable: { name: '', target: '', thresholds: "0,1", valueName: 'avg' },
           indicators: [],
           series_names: []
         },
@@ -132,7 +133,7 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'lodash', './gauge'
             this.panel.measures.series_names = _.size(this.dataList) > 0 ? _.map(this.dataList, function (s) {
               return s.target;
             }) : [];
-            _.each(['pointer', 'water_mark', 'temperature'], function (m) {
+            _.each(['pointer', 'water_mark', 'temperature', 'disable'], function (m) {
               var c = _this2.getData(_this2.panel.measures[m], _this2.dataList)[0];
               _this2.panel.multigauge.config[m] = c;
               _this2.panel.multigauge.data[m] = c.value;

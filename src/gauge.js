@@ -9,11 +9,12 @@ export function directive_gauge($timeout){
 				size:'='
 			},
 			template: `
-				<div  bs-tooltip="config.pointer.target+': '+data.pointer +'<br>'+config.temperature.target+': '+data.temperature+'<br>'+config.water_mark.target+': '+data.water_mark" >
+				<div  style="position: relative" bs-tooltip="config.pointer.target+': '+data.pointer +'<br>'+config.temperature.target+': '+data.temperature+'<br>'+config.water_mark.target+': '+data.water_mark" >
 					<div style="display:block;margin: 0 auto; width: {{size}}px" id="gauge-{{gaugeid}}"> </div>
 					<div  style="display:block; margin: 0 auto; width: {{size}}px; text-align: center">
 						<div ng-repeat="ind in indicators" ng-style="styleIndicator(ind)" bs-tooltip="ind.target+':'+ind.value">{{ind.name}}</div>
 					</div>
+					<div ng-if="data.disable!=undefined && data.disable>=config.disable.min && data.disable <=config.disable.max" style="width:100%; height: 100%; position: absolute; top:0; left:0; z-index:10; background-color:rgba(200,200,200,0.4); color:red; font-weight: bold" align="right">{{config.disable.name}}</div>
 				</div>`,
 			link:function(scope, element, attrs) {
 				scope.gaugeid=scope.$id
