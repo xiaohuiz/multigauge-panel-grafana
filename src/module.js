@@ -78,12 +78,20 @@ class MultiGaugeCtrl extends MetricsPanelCtrl {
     }
   }
   combineMetaAndData(measure,series){
-    var v=_.assign({
+    var v=_.assign(angular.copy(measure),{
       min: +measure.thresholds.split(',')[0],
       max: +measure.thresholds.split(',')[1],
       value: null
-    },measure);
-    if(v.name=='') v.name=v.target;
+    });
+    if(v.name==''){
+      v.name=v.target;
+    }else{
+      var _re=v.name.match(/^\/(.+)\/$/);
+      if(_.size(_re)>0 && series && series.target!=undefined){//it's a regex
+        var re=new RegExp(_re[1]);
+        v.name=_.last(re.exec(series.target));
+      }
+    }
     if(series && series.target!=undefined) v.target=series.target;
     if(series && _.size(series.datapoints)>0){
       var ts = new TimeSeries({datapoints: series.datapoints, alias: series.target, });
